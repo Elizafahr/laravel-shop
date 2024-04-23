@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\UsersController;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Models\Post;
+use App\Models\OrderDetail;
 use App\Models\shopping_carts;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Cart;
-use App\Models\Shopping_cart;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB; // подключаем
@@ -88,18 +88,32 @@ class MainController extends Controller
     }
 
     //отображение корзины
+    // public function showCart()
+    // {
+    //     $carts = Cart::where('client_id', auth()->id())->get();
+
+    //     $cartIds = $carts->pluck('id')->toArray();
+
+    //     $shCart = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
+
+    //     $id = auth()->id();
+
+    //     return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
+    // }
     public function showCart()
     {
         $carts = Cart::where('client_id', auth()->id())->get();
 
-        $cartIds = $carts->pluck('id')->toArray();
-
-        $shCart = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
+            $cartIds = $carts->pluck('id')->toArray();
+        $shCart = shopping_carts::with('cart')
+            ->where('shopping_cart_id_reserve', $cartIds)
+            ->get();
 
         $id = auth()->id();
 
         return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
     }
+
 
 
 
@@ -220,4 +234,53 @@ class MainController extends Controller
 
         return redirect()->back();
     }
+ 
+
+
+
+    public function confirmOrder()
+    {
+        // Загрузить товары из корзины для отображения на странице подтверждения
+         $carts = Cart::where('client_id', auth()->id())->get();
+
+        $cartIds = $carts->pluck('id')->toArray();
+
+        $cartItems = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
+
+
+
+        return view('pages.confirm', ['cartItems' => $cartItems]);
+    }
+    public function storeOrder(Request $request)
+    {
+        // Пример сохранения заказа
+        $order = new Order;
+        $order->client_id = Auth::id();  
+        $order->order_date = now();
+        $order->status = 'Получен';
+        $order->save();
+         $carts = Cart::where('client_id', auth()->id())->get();
+
+        $cartIds = $carts->pluck('id')->toArray();
+
+        $shCarts = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
+
+        foreach ($shCarts as $item) {
+            $orderDetail = new OrderDetail;
+            $orderDetail->order_id = $order->id;
+            $orderDetail->product_id = $item->product_id;
+            $orderDetail->quantity = $item->quantity;
+            $orderDetail->save();
+        }
+
+        
+        $carts = Cart::where('client_id', auth()->id())->get();
+        foreach ($carts as $cart) {
+            $cart->delete();
+        }
+        return redirect('/cart');
+    }
 }
+
+// Добавить добавление фото при добавлении продукта, добавить редактирование, поправить отображение,
+// добавить изменение стратуса, пофиксить шапку 
