@@ -100,11 +100,24 @@ class MainController extends Controller
 
     //     return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
     // }
+    // public function showCart()
+    // {
+    //     $carts = Cart::where('client_id', auth()->id())->get();
+
+    //         $cartIds = $carts->pluck('id')->toArray();
+    //     $shCart = shopping_carts::with('cart')
+    //         ->where('shopping_cart_id_reserve', $cartIds)
+    //         ->get();
+
+    //     $id = auth()->id();
+
+    //     return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
+    // }
     public function showCart()
     {
         $carts = Cart::where('client_id', auth()->id())->get();
+        $cartIds = $carts->pluck('id')->toArray();
 
-            $cartIds = $carts->pluck('id')->toArray();
         $shCart = shopping_carts::with('cart')
             ->where('shopping_cart_id_reserve', $cartIds)
             ->get();
@@ -115,6 +128,20 @@ class MainController extends Controller
     }
 
 
+    public function updateQuantity(Request $request, $id)
+    {
+        $shoppingCart = shopping_carts::findOrFail($id);
+
+        if ($request->input('action') === 'increment') {
+            $shoppingCart->quantity += 1;
+        } elseif ($request->input('action') === 'decrement' && $shoppingCart->quantity > 1) {
+            $shoppingCart->quantity -= 1;
+        }
+
+        $shoppingCart->save();
+
+        return redirect()->back();
+    }
 
 
     public function showProductForm()
@@ -234,14 +261,14 @@ class MainController extends Controller
 
         return redirect()->back();
     }
- 
+
 
 
 
     public function confirmOrder()
     {
         // Загрузить товары из корзины для отображения на странице подтверждения
-         $carts = Cart::where('client_id', auth()->id())->get();
+        $carts = Cart::where('client_id', auth()->id())->get();
 
         $cartIds = $carts->pluck('id')->toArray();
 
@@ -255,11 +282,11 @@ class MainController extends Controller
     {
         // Пример сохранения заказа
         $order = new Order;
-        $order->client_id = Auth::id();  
+        $order->client_id = Auth::id();
         $order->order_date = now();
         $order->status = 'Получен';
         $order->save();
-         $carts = Cart::where('client_id', auth()->id())->get();
+        $carts = Cart::where('client_id', auth()->id())->get();
 
         $cartIds = $carts->pluck('id')->toArray();
 
@@ -273,7 +300,7 @@ class MainController extends Controller
             $orderDetail->save();
         }
 
-        
+
         $carts = Cart::where('client_id', auth()->id())->get();
         foreach ($carts as $cart) {
             $cart->delete();
@@ -282,5 +309,11 @@ class MainController extends Controller
     }
 }
 
-// Добавить добавление фото при добавлении продукта, добавить редактирование, поправить отображение,
-// добавить изменение стратуса, пофиксить шапку 
+// Добавить добавление фото при добавлении продукта, 
+//добавить редактирование, 
+//поправить отображение,
+// добавить изменение стратуса, 
+// пофиксить увеличение товаров в карзине
+// пофиксить проверку юзера в оформлении
+// добавить изменение стратуса, 
+//пофиксить шапку - done 

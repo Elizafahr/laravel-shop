@@ -91,4 +91,7 @@ Route::post('/cart/add/',  [MainController::class, 'addToCart'])->name('cartAdd'
 Route::get('/order/confirm-order', [MainController::class, 'confirmOrder']);
 Route::post('/order/create', [MainController::class, 'storeOrder']);
 
-//Route::post('/confirm-order', 'OrderController@confirmOrder')->name('confirm.order');
+ 
+
+Route::post('/updateQuantity/{id}', [MainController::class, 'updateQuantity'])->name('updateQuantity');
+//Route::post('/updateQuantity/{id}', 'YourController@updateQuantity')->name('updateQuantity');
