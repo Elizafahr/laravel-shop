@@ -13,8 +13,8 @@
         <button type="submit" class="btn btn-primary">Подтвердить</button>
     </form>
 </div>
- 
 
- 
+
+
 
 @include('components.footer')
