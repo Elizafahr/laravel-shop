@@ -25,12 +25,17 @@ class shopping_carts extends Model
     {
         //return $this->hasMany(Product::class);
 
-       return $this->hasMany(Product::class, 'product_id', 'product_id');
+        return $this->hasMany(Product::class, 'product_id', 'product_id');
     }
+
     public function products()
     {
         //return $this->hasMany(Product::class);
 
-       return $this->hasMany(Product::class, 'product_id', 'product_id');
+        return $this->hasMany(Product::class, 'product_id', 'product_id');
+    }
+    public function productt()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 }

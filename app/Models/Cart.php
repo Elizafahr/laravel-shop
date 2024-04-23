@@ -15,7 +15,7 @@ class Cart extends Model
 
     public function shoppingCarts()
     {
-        // return $this->hasMany(shopping_carts::class);
-        return $this->hasMany(shopping_carts::class, 'shopping_cart_id', 'shopping_cart_id');
+         return $this->hasMany(shopping_carts::class);
+        // return $this->hasMany(shopping_carts::class, 'shopping_cart_id', 'shopping_cart_id');
     }
 }

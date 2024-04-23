@@ -15,38 +15,14 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB; // подключаем
 
+use function PHPUnit\Framework\isEmpty;
+
 class MainController extends Controller
 {
 
 
 
-
-    // обработчик маршрута http://hostcontroller/smth/{параметр}
-    // public function showEmployee()
-    // {
-    //     $employee = [
-    //         ['name' => 'Иван', 'age' => 33, 'salary' => 50000],
-    //         ['name' => 'Олег', 'age' => 14, 'salary' => 6000],
-    //         ['name' => 'Анна', 'age' => 22, 'salary' => 77000],
-    //         ['name' => 'Ольга', 'age' => 23, 'salary' => 10000],
-    //     ];
-
-
-    //     return view('layout', ['employee' => $employee]);
-    // }
-
-    // public function userAge($userAge)
-    // {
-    //     return view("page")->with(["userAge" => $userAge]);
-    // }
-
-    // public function about()
-    // {
-    //     $ShoppingCarts = shopping_carts::all();
-    //     return view("pages.about")->with(["ShoppingCarts" => $ShoppingCarts]);
-    // }
-
-
+    //осноаная страница
     public function main()
     {
         $Categories = Category::all();
@@ -54,15 +30,14 @@ class MainController extends Controller
     }
 
 
+    // страница о нас
     public function about()
     {
         $shoppingCarts = shopping_carts::with('products')->get();
         return view("pages.about")->with(["shoppingCarts" => $shoppingCarts]);
     }
 
-
-
-
+    // страница продуктп
     public function product($id)
     {
         $products = Product::with('category')->where('product_id', $id)->first();
@@ -72,6 +47,7 @@ class MainController extends Controller
     }
 
 
+    // страница местоположение
     public function location()
     {
         return view("pages.location");
@@ -80,6 +56,7 @@ class MainController extends Controller
 
 
 
+    // страница каталога
     public function catalog(Request $request)
     {
         $query = Product::query();
@@ -110,12 +87,18 @@ class MainController extends Controller
         return view("pages.catalog", ["Products" => $Products, "categories" => $categories, "request" => $request]);
     }
 
+    //отображение корзины
     public function showCart()
     {
-
         $carts = Cart::where('client_id', auth()->id())->get();
+
+        $cartIds = $carts->pluck('id')->toArray();
+
+        $shCart = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
+
         $id = auth()->id();
-        return view("pages.cart", ["carts" => $carts],  ["id" => $id]);
+
+        return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
     }
 
 
@@ -123,6 +106,8 @@ class MainController extends Controller
     public function showProductForm()
     {
     }
+
+    //страница админа
     public function admin()
     {
         $Categories = Category::all();
@@ -136,8 +121,7 @@ class MainController extends Controller
     }
 
 
-
-
+    //добавление категории
     public function showFormCateg()
     {
         return view('pages.categForm');
@@ -155,7 +139,7 @@ class MainController extends Controller
 
 
 
-
+    //добавление ппродуктаоста
     public function showFormPost()
     {
         return view('pages.postForm');
@@ -178,16 +162,16 @@ class MainController extends Controller
     }
 
 
+    //удаление категории
 
     public function delCateg($id)
     {
         $cat = Category::find($id)->delete();
         return redirect('/admin');
     }
-
+    //удаление продукта
     public function delProduct($id)
     {
-        // $cat = Product::find($id)->delete();
 
         DB::table('Products')
             ->where("product_id", $id)
@@ -203,5 +187,37 @@ class MainController extends Controller
         DB::table('Orders')
             ->where("order_id", $id)->get();
         return redirect('/admin');
+    }
+
+
+
+    //добавление товаров в корзину
+
+    public function addToCart(Request $request)
+    {
+        // Найдем корзину текущего пользователя
+        $cart = Cart::where('client_id', auth()->id())->first();
+        $product = DB::table('Products')->where("product_id", $request->product_id)->get();
+        // Если корзина уже существует, добавим товар в нее
+        if ($cart) {
+            $shopping_cart = new shopping_carts();
+            $shopping_cart->product_id = $request->product_id;
+            $shopping_cart->quantity = 1;
+            $shopping_cart->shopping_cart_id_reserve = $cart->id;
+            $shopping_cart->save();
+        } else {
+            // Если корзина не существует, создадим новую и добавим товар в нее
+            $new_cart = new Cart();
+            $new_cart->client_id = auth()->id();
+            $new_cart->save();
+
+            $shopping_cart = new shopping_carts();
+            $shopping_cart->product_id = $request->product_id;
+            $shopping_cart->quantity = 1;
+            $shopping_cart->shopping_cart_id_reserve = $new_cart->id;
+            $shopping_cart->save();
+        }
+
+        return redirect()->back();
     }
 }

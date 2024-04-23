@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
-    public function product()
+    public function cart()
     {
         return $this->belongsTo(shopping_carts::class);
     }
