@@ -33,9 +33,10 @@
                 <form action="{{ route('cartAdd') }}" method="post">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->product_id }}">
-                    <button type="submit" class="btn btn-primary">Add to cart</button>
+                    <button type="submit" class=" d-flex btn w-100 text-align-center justify-content-center btn-primary">Добавить в корзину</button>
+                    <a href="product/:{{ $product->product_id }}" class="btn   d-flex btn w-100 text-align-center justify-content-center">Посмотреть больше</a>
+
                 </form>
-                <a href="product/:{{ $product->product_id }}" class="btn ">View more</a>
             </div>
         </div>
     @endforeach
