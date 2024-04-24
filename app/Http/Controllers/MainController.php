@@ -197,6 +197,20 @@ class MainController extends Controller
         $product->year_of_production = $request->year_of_production;
         $product->страна = $request->страна;
         $product->модель = $request->модель;
+        // $product->img = 'required|image|mimes:jpeg,png,jpg,gif|max:2048';
+
+
+
+        // Загрузка изображения
+        if ($request->hasFile('img')) {
+            $img = $request->file('img');
+            $imgName = time() . '.' . $img->extension();
+            $img->move(public_path('img'), $imgName);
+            $product->img = $imgName;
+        }
+
+
+
         $product->save();
 
         return redirect('/admin')->with('success', 'categ created successfully!');
@@ -269,15 +283,11 @@ class MainController extends Controller
     {
         // Загрузить товары из корзины для отображения на странице подтверждения
         $carts = Cart::where('client_id', auth()->id())->get();
-
         $cartIds = $carts->pluck('id')->toArray();
-
         $cartItems = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
-
-
-
         return view('pages.confirm', ['cartItems' => $cartItems]);
     }
+
     public function storeOrder(Request $request)
     {
         // Пример сохранения заказа

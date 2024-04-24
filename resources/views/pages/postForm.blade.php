@@ -1,33 +1,45 @@
-@include('components.header')
-<div class="">
-    <form method="POST" action="/admin/createPost" class="d-flex flex-column w-50">
+@include('components.header')<div class="container">
+    <form method="POST" action="/admin/createPost" class="d-flex mt-3 flex-column w-50" enctype="multipart/form-data">
         @csrf
 
+        <div class="form-group">
+            <label for="product_name">Название продукта:</label>
+            <input type="text" class="form-control" id="product_name" name="product_name">
+        </div>
 
-        <label for="product_name">product_name:</label>
-        <input type="text" id="product_name" name="product_name">
+        <input type="hidden" id="category_id" name="category_id" value="2">
 
-         <input type="hidden" id="category_id " name="category_id" value="2">
+        <div class="form-group">
+            <label for="description">Описание:</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
 
-         <label for="description">description:</label>
-         <input type="text" id="description" name="description">
+        <div class="form-group">
+            <label for="price">Цена:</label>
+            <input type="number" class="form-control" id="price" name="price">
+        </div>
 
-         <label for="price">price:</label>
-        <input type="text" id="price" name="price">
+        <div class="form-group">
+            <label for="year_of_production">Год производства:</label>
+            <input type="number" class="form-control" id="year_of_production" name="year_of_production" min="1950" max="2024">        </div>
+        
 
-        <label for="year_of_production">year_of_production:</label>
-        <input type="text" id="year_of_production" name="year_of_production">
+        <div class="form-group">
+            <label for="страна">Страна:</label>
+            <input type="text" class="form-control" id="страна" name="страна">
+        </div>
 
-        <label for="страна">страна:</label>
-        <input type="text" id="страна" name="страна">
+        <div class="form-group">
+            <label for="модель">Модель:</label>
+            <input type="text" class="form-control" id="модель" name="модель">
+        </div>
+        <div class="form-group">
+            <label for="img">Фото:</label>
+            <input type="file" class="form-control-file" id="img" name="img">
+        </div>
 
-        <label for="модель">модель:</label>
-        <input type="text" id="модель" name="модель">
-
-
-
-        <button type="submit">Создать</button>
+        <button type="submit" class="btn btn-primary">Создать</button>
     </form>
-
 </div>
+
 @include('components.footer')
