@@ -81,7 +81,7 @@ Route::post('/admin/createPost', [MainController::class, 'storePost']);
 
 
 //не работает
-Route::get('admin/changeStatus/{id}', [MainController::class, 'changeStatus']);
+Route::get('admin/changeStatus/{id}/{status}', [MainController::class, 'changeStatus']);
 
 
 //добавление товаров в корзину

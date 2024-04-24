@@ -25,9 +25,9 @@
             </div>
         </div>
     </form>
-    
-    
-    
+
+
+
     <div class="d-flex flex-wrap gap-3">
         @foreach ($Products as $product)
             <div class="card" style="width: 18rem;">
@@ -38,23 +38,24 @@
                 <div class="card-body">
                     <h5 class="card-title"> {{ $product->product_name }}</h5>
                     <p class="card-text">{{ $product->description }}</p>
-                    {{-- <a href="/cart/add/{{ $product->product_id }}" class="btn btn-primary">Add to cart</a> --}}
-                    {{-- <form action="">
-                        <input type="hidden" name="productId" value="{{$product->product_id}}">
-                    </form> --}}
+
                     <form action="{{ route('cartAdd') }}" method="post">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->product_id }}">
-                        <button type="submit" class=" d-flex btn w-100 text-align-center justify-content-center btn-primary">Добавить в корзину</button>
-                        <a href="product/:{{ $product->product_id }}" class="btn   d-flex btn w-100 text-align-center justify-content-center">Посмотреть больше</a>
-    
+                        @auth <button type="submit"
+                                class=" d-flex btn w-100 text-align-center justify-content-center btn-primary">Добавить в
+                            корзину</button> @endauth
+                        <a href="product/:{{ $product->product_id }}"
+                            class="btn  btn-outline-primary d-flex btn w-100 mt-1 text-align-center justify-content-center">Посмотреть
+                            больше</a>
+
                     </form>
+
                 </div>
             </div>
         @endforeach
     </div>
-    
-    
-    {{-- добавить в бд поля характерисики товаров - в дальнейшем выводить их --}}
-    
+
+
+
 </div>

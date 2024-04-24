@@ -237,13 +237,16 @@ class MainController extends Controller
 
 
 
-    public function changeStatus($id)
+
+    //смена статуса заказа
+    public function changeStatus($id, $status)
     {
-        DB::table('Orders')
-            ->where("order_id", $id)->get();
+        $order = Order::findOrFail($id); // Find the order by ID
+
+        $order->status = $status;
+        $order->save();
         return redirect('/admin');
     }
-
 
 
     //добавление товаров в корзину
@@ -319,11 +322,10 @@ class MainController extends Controller
     }
 }
 
-// Добавить добавление фото при добавлении продукта, 
+// Добавить добавление фото при добавлении продукта  - done 
 //добавить редактирование, 
-//поправить отображение,
-// добавить изменение стратуса, 
+//поправить отображение - done ,
+// добавить изменение стратуса - done , 
 // пофиксить увеличение товаров в карзине
 // пофиксить проверку юзера в оформлении
-// добавить изменение стратуса, 
-//пофиксить шапку - done 
+ //пофиксить шапку - done 

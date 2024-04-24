@@ -52,18 +52,22 @@
             @foreach ($orders as $order)
                 <tr>
 
-                    <td class="card-title"> {{ $order->order_id }}</td>
+                    <td class="card-title"> {{ $order->id }}</td>
                     <td class="card-title"> {{ $order->order_date }}</td>
                     <td class="card-title"> {{ $order->status }}</td>
-                    <td><a href="admin/changeStatus/{{ $order->order_id }}">changeStatus</a></td>
-                    {{-- <h5 class="card-title"> {{ $order->user->name }}</h5> --}}
+                    <td class="list-group list-group-horizontal">
+                        <a href="admin/changeStatus/{{ $order->id }}/approved" class="list-group-item">status на
+                            одобрен</a>
+                        <a href="admin/changeStatus/{{ $order->id }}/delivered" class="list-group-item">status на
+                            доставлен</a>
+                        <a href="admin/changeStatus/{{ $order->id }}/rejected" class="list-group-item">status на
+                            отклонен</a>
+                    </td>
+
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    {{-- <p>{{$orders}}</p> --}}
-
 
 </div>
 
