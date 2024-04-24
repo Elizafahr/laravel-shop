@@ -20,4 +20,5 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+          protected $primaryKey = 'product_id';         // Остальной код модели здесь     }
 }

@@ -98,3 +98,11 @@ Route::post('/updateQuantity/{id}', [MainController::class, 'updateQuantity'])->
  
 //logout
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+// Route::get('/admin/editProductForm', [MainController::class, 'showFormPostChange'])->name('logout');
+ 
+Route::post('/admin/editProduct', [MainController::class, 'editProduct']);
+
+
+Route::get('/admin/editProductForm/{product_id}', [MainController::class, 'showFormPostChange'])->name('editProductForm');

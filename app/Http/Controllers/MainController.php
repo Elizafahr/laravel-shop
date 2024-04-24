@@ -87,32 +87,7 @@ class MainController extends Controller
         return view("pages.catalog", ["Products" => $Products, "categories" => $categories, "request" => $request]);
     }
 
-    //отображение корзины
-    // public function showCart()
-    // {
-    //     $carts = Cart::where('client_id', auth()->id())->get();
-
-    //     $cartIds = $carts->pluck('id')->toArray();
-
-    //     $shCart = shopping_carts::with('cart')->whereIn('shopping_cart_id_reserve', $cartIds)->get();
-
-    //     $id = auth()->id();
-
-    //     return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
-    // }
-    // public function showCart()
-    // {
-    //     $carts = Cart::where('client_id', auth()->id())->get();
-
-    //         $cartIds = $carts->pluck('id')->toArray();
-    //     $shCart = shopping_carts::with('cart')
-    //         ->where('shopping_cart_id_reserve', $cartIds)
-    //         ->get();
-
-    //     $id = auth()->id();
-
-    //     return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
-    // }
+    //отображение корзины 
     public function showCart()
     {
         $carts = Cart::where('client_id', auth()->id())->get();
@@ -133,10 +108,9 @@ class MainController extends Controller
     {
         $shoppingCart = shopping_carts::findOrFail($id);
 
-         if ($request->input('action') === 'increment') {
+        if ($request->input('action') === 'increment') {
             $shoppingCart->quantity += 1;
-        }
-         elseif ($request->input('action') === 'decrement' && $shoppingCart->quantity > 1) {
+        } elseif ($request->input('action') === 'decrement' && $shoppingCart->quantity > 1) {
             $shoppingCart->quantity -= 1;
         }
 
@@ -181,8 +155,54 @@ class MainController extends Controller
     }
 
 
+    //изменение ппродуктаоста
 
-    //добавление ппродуктаоста
+    // public function showFormPostChange($product_id)
+    // {
+
+    //     $product = Product::where('product_id', $product_id)->get();
+    //      return view('pages\postFormChange', compact('product'));
+    // }
+
+    public function showFormPostChange($product_id)
+    {
+        // $product = Product::findOrFail($product_id); // Using findOrFail to handle case when product is not found
+        $products = Product::where('product_id', $product_id)->get();
+
+        foreach ($products as $product) {
+            $product = $product;
+        }
+        return view('pages.postFormChange', compact('product')); // Change the backslashes to regular slashes
+    }
+
+    public function editProduct(Request $request)
+    {
+        //$product = Product::find($request->product_id);
+        $products  = Product::where('product_id', $request->product_id)->get();
+        foreach ($products as $product) {
+            $product = $product;
+        }
+         // Обновление информации о товаре
+        $product->product_name = $request->product_name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->year_of_production = $request->year_of_production;
+        $product->страна = $request->страна;
+        $product->модель = $request->модель;
+
+        // Обновление изображения товара, если загружено новое изображение
+        if ($request->hasFile('img')) {
+            $image = $request->file('img');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('img'), $imageName);
+            $product->img = $imageName;
+        }
+
+        $product->save();
+
+        return redirect('/admin');     }     
+
+    //добавление  продукта 
     public function showFormPost()
     {
         return view('pages.postForm');

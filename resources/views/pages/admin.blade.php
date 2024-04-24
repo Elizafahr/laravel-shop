@@ -28,7 +28,9 @@
                     <h5 class="card-title"> {{ $product->product_name }}</h5>
                     <p class="card-text">{{ $product->description }}</p>
                     <a href="admin/productDel/{{ $product->product_id }}" class="btn ">Удалить</a>
-                    <a href="product/:{{ $product->product_id }}" class="btn ">Просмотреть товар</a>
+                    {{-- <a href="product/change/:{{ $product->product_id }}" class="btn ">Изменить</a> --}}
+                    <a href="{{ route('editProductForm', ['product_id' => $product->product_id]) }}" class="btn">Изменить</a>
+                    {{-- <a href="{{ route('editProductForm', ['product_id' => $product->product_id]) }}" class="btn">Изменить</a> --}}
                 </div>
             </div>
         @endforeach
