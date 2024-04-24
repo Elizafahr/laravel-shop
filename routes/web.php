@@ -5,6 +5,7 @@ use App\Http\Controllers\MainController; // ПОДКЛЮЧЕНИЕ КОНТРО�
 use App\Http\Controllers\PostController; // ПОДКЛЮЧЕНИЕ КОНТРОЛЛЕРА
 use App\Http\Controllers\Page; // ПОДКЛЮЧЕНИЕ КОНТРОЛЛЕРА
 use App\Http\Controllers\Test; // ПОДКЛЮЧЕНИЕ КОНТРОЛЛЕРА
+use App\Http\Controllers\AuthController; // ПОДКЛЮЧЕНИЕ КОНТРОЛЛЕРА
 use App\Http\Controllers\Employee; // ПОДКЛЮЧЕНИЕ КОНТРОЛЛЕРА
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UserController;
@@ -80,7 +81,7 @@ Route::get('/admin/postAdd', [MainController::class, 'showFormPost']);
 Route::post('/admin/createPost', [MainController::class, 'storePost']);
 
 
-//не работает
+//change order status
 Route::get('admin/changeStatus/{id}/{status}', [MainController::class, 'changeStatus']);
 
 
@@ -92,6 +93,8 @@ Route::get('/order/confirm-order', [MainController::class, 'confirmOrder']);
 Route::post('/order/create', [MainController::class, 'storeOrder']);
 
  
-
+//change quantity of products in cart
 Route::post('/updateQuantity/{id}', [MainController::class, 'updateQuantity'])->name('updateQuantity');
-//Route::post('/updateQuantity/{id}', 'YourController@updateQuantity')->name('updateQuantity');
+ 
+//logout
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -21,15 +21,13 @@ class AuthController extends Controller
             echo   $request;
             echo  'Неправильный логин или пароль';
         } else {
-            if(Auth::user()->role_id==1){
+            if (Auth::user()->role_id == 1) {
                 return redirect('/admin');
-            }
-            else{
-                            return redirect('/index');
-
+            } else {
+                return redirect('/index');
             }
             // echo 'Вы успешно авторизовались';
-         }
+        }
     }
     //метод для регистрации
     public function postReg(Request $request)
@@ -49,5 +47,10 @@ class AuthController extends Controller
         echo $user;
         return redirect('/index')
             ->with('success', 'Вы успешно зарегистрировались');
+    }
+    public function logout()
+    {
+        Auth::logout(); // Выход пользователя
+        return redirect('/index'); // Перенаправление на страницу входа
     }
 }

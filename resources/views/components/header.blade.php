@@ -48,10 +48,11 @@
                     </ul>
 
                     @auth
+                    <a class="btn btn-outline-success" href="{{ route('logout') }}" style="margin-left: 10px">Выйти</a>
                         <a class="btn btn-outline-success" href="{{ url('cart') }}" style="margin-left: 10px">Корзина</a>
+                    @else
+                        <a class="btn btn-outline-success" href="{{ url('login') }}" style="margin-left: 10px">Войти</a>
                     @endauth
-
-                    <a class="btn btn-outline-success" href="{{ url('login') }}" style="margin-left: 10px">Войти</a>
                 </div>
             </div>
         </nav>
