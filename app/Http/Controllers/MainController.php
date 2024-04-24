@@ -128,13 +128,15 @@ class MainController extends Controller
     }
 
 
+    //изменение количества товара в корзине
     public function updateQuantity(Request $request, $id)
     {
         $shoppingCart = shopping_carts::findOrFail($id);
 
-        if ($request->input('action') === 'increment') {
+         if ($request->input('action') === 'increment') {
             $shoppingCart->quantity += 1;
-        } elseif ($request->input('action') === 'decrement' && $shoppingCart->quantity > 1) {
+        }
+         elseif ($request->input('action') === 'decrement' && $shoppingCart->quantity > 1) {
             $shoppingCart->quantity -= 1;
         }
 
