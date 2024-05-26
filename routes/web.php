@@ -57,8 +57,8 @@ Route::middleware('web')->namespace('\App\Http\Controllers')->group(function () 
 // Route::get('/cart', [MainController::class, 'showCart'])->name('cart.show');
 
 
-Route::get('/cart', [MainController::class, 'showCart']);
-
+Route::get('/cart', [MainController::class, 'showCart'])->name('cart.show');
+Route::delete('/cart/{order}', [MainController::class, 'destroy'])->name('cart.destroy');
 
 
 Route::get('/admin', [MainController::class, 'admin']);

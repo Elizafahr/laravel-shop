@@ -33,8 +33,10 @@ class MainController extends Controller
     // страница о нас
     public function about()
     {
-        $shoppingCarts = shopping_carts::with('products')->get();
-        return view("pages.about")->with(["shoppingCarts" => $shoppingCarts]);
+        // $shoppingCarts = shopping_carts::with('products')->get();
+        // return view("pages.about")->with(["shoppingCarts" => $shoppingCarts]);
+        $latestProducts = Product::latest()->take(3)->get();
+        return view('pages.about', compact('latestProducts'));
     }
 
     // страница продуктп
@@ -99,8 +101,32 @@ class MainController extends Controller
 
         $id = auth()->id();
 
-        return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart]);
+
+        // $orders = Order::where('client_id', auth()->id())
+        //              ->orderBy('created_at', 'desc')
+        //              ->get();
+
+        $orders  = Order::where('client_id', auth()->id())->with('orderDetails')->get();
+
+        //$orders = Auth::user()->orders()->with('orderDetails')->get();
+
+
+        return view("pages.cart", ["carts" => $carts, "id" => $id, "shCarts" => $shCart, "orders" => $orders]);
     }
+
+
+    public function destroy(Order $order)
+    {
+        if ($order->created_at->diffInDays(now()) <= 7) {
+            $order->orderDetails()->delete();
+            $order->delete();
+            return redirect()->route('cart.show')->with('success', 'Заказ удален.');
+        } else {
+            return redirect()->route('cart.show')->with('error', '7 дней с момента заказа вышло!');
+        }
+    }
+
+
 
 
     //изменение количества товара в корзине
@@ -182,7 +208,7 @@ class MainController extends Controller
         foreach ($products as $product) {
             $product = $product;
         }
-         // Обновление информации о товаре
+        // Обновление информации о товаре
         $product->product_name = $request->product_name;
         $product->description = $request->description;
         $product->price = $request->price;
@@ -200,7 +226,8 @@ class MainController extends Controller
 
         $product->save();
 
-        return redirect('/admin');     }     
+        return redirect('/admin');
+    }
 
     //добавление  продукта 
     public function showFormPost()
@@ -319,7 +346,7 @@ class MainController extends Controller
         $order = new Order;
         $order->client_id = Auth::id();
         $order->order_date = now();
-        $order->status = 'Получен';
+        $order->status = 'Оформлен';
         $order->save();
         $carts = Cart::where('client_id', auth()->id())->get();
 
@@ -343,11 +370,3 @@ class MainController extends Controller
         return redirect('/cart');
     }
 }
-
-// Добавить добавление фото при добавлении продукта  - done 
-//добавить редактирование, 
-//поправить отображение - done ,
-// добавить изменение стратуса - done , 
-// пофиксить увеличение товаров в карзине
-// пофиксить проверку юзера в оформлении
- //пофиксить шапку - done 

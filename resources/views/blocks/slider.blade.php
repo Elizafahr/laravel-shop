@@ -1,4 +1,4 @@
-<h3 class="container mt-4">Последние добавленные товары</h3>
+<h3 class="container mt-4">Новинки</h3>
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
@@ -11,37 +11,18 @@
             aria-label="Slide 4"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4"
             aria-label="Slide 5"></button>
-
-
     </div>
     <div class="carousel-inner mt-4">
-        @foreach ($shoppingCarts as $shoppingCart)
-            @if ($shoppingCart->shopping_cart_id == 1)
-                <div class="carousel-item active  ">
-                    <div class="d-flex justify-content-center">
-                        @foreach ($shoppingCart->products as $product)
-                            <div class="flex">
-                                <td>{{ $product->product_name }}</td>
-                                <img style="max-height: 250px" src="{{ asset('img/' . $product->img) }}"
-                                    alt="{{ $product->img }}">
-                            </div>
-                        @endforeach
-                    </div>
-
-                </div>
-            @else
-                <div class="carousel-item">
-                    <div class="d-flex justify-content-center">
-                        @foreach ($shoppingCart->products as $product)
-                            <div class="flex">
-                                <td>{{ $product->product_name }}</td>
-                                <img style="max-height: 250px" src="{{ asset('img/' . $product->img) }}"
-                                    alt="{{ $product->img }}">
-                            </div>
-                        @endforeach
+        @foreach ($latestProducts as $key => $product)
+            <div class="carousel-item @if($key == 0) active @endif">
+                <div class="d-flex justify-content-center">
+                    <img style="max-height: 250px" src="{{ asset('img/' . $product->img) }}"
+                        alt="{{ $product->img }}">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ $product->product_name }}</h5>
                     </div>
                 </div>
-            @endif
+            </div>
         @endforeach
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"

@@ -11,5 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
-    
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+    // protected $fillable = ['order_id', 'product_id', 'quantity'];
 }

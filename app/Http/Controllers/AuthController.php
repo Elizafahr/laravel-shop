@@ -14,11 +14,11 @@ class AuthController extends Controller
     public function postSignin(Request $request)
     {
         if (!Auth::attempt($request->only('login', 'password'))) {
-            var_dump($request);
+            // var_dump($request);
 
             echo Auth::user();
 
-            echo   $request;
+            //echo   $request;
             echo  'Неправильный логин или пароль';
         } else {
             if (Auth::user()->role_id == 1) {
