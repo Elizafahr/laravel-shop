@@ -1,4 +1,4 @@
-## Simply internet-site buils on laravel
+## Simply internet-site buildon laravel
 
 ## About Laravel
 
