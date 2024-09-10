@@ -1,4 +1,4 @@
-# Super easy edu project buildon laravel
+# Super easy edu (college) project buildon laravel
 
 This is a really small online shop with a really a short list of features made according to the examination requirements
 
